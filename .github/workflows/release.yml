@@ -1,4 +1,4 @@
-name: Release with changelog and version bump
+name: Release
 on:
   workflow_dispatch:
     inputs:
@@ -7,26 +7,40 @@ on:
         required: false
         default: ''
 jobs:
-  build:
+  getversion:
+    runs-on: ubuntu-latest
+    if: ${{ env.INPUT_VERSION == '' }}
+    steps:
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - uses: actions/setup-python@v2
+      name: Set up Python
+    - name: Get current version
+      run: echo "CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+    - name: Get next version
+      run: echo "NEXT_VERSION=$(python contrib/bump-version.py --current-version=$CURRENT_VERSION --suffixes=-SNAPSHOT)" >> $GITHUB_ENV
+
+  changelog:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0
-    #- uses: lavr/action-release@master
-    #  id: runactionrelease
-    #  name: Run action-release
-    #  with:
-    #    version: ${{ github.event.inputs.version }}
+        fetch-depth: 300
+    - run: |
+        echo "$NEXT_VERSION"
     - run: |
         mkdir -p release/${INPUT_VERSION}
-        contrib/changelog-as-json.sh > release/${INPUT_VERSION}/commits.json
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git add release
-        git commit -m "release"
-        git push
-    - name: Echo result
-      run: |
-        echo "${{ steps.runactionrelease.outputs.version }}"
+        contrib/changelog-md.sh > changelog.md
+    #- name: Echo result
+    #  run: |
+    #    echo "${{ steps.runactionrelease.outputs.version }}"
 
+
+#git config user.name github-actions
+#git config user.email github-actions@github.com
+#git add release
+#git commit -m "release"
+#git push
