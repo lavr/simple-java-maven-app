@@ -1,5 +1,11 @@
 name: Release with changelog and version bump
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to set (if empty, action increases previous release minnor version)'
+        required: false
+        default: ''
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -8,7 +14,7 @@ jobs:
       id: runactionrelease
       name: Run action-release
       with:
-        version: 1.0
+        version: ${{ github.event.inputs.version }}
     - name: Echo result
       run: |
         echo "${{ steps.runactionrelease.outputs.version }}"
