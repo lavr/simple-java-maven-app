@@ -36,8 +36,14 @@ jobs:
       run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
       env:
         ENV_CONTEXT: ${{ toJSON(env) }}
+    - name: ls
+      run: ls -lhas
     - name: Get next version
       run: echo "NEXT_VERSION=$(python contrib/bump-version.py --current-version=$CURRENT_VERSION --suffixes=-SNAPSHOT)" >> $GITHUB_ENV
+    - name: Dump env context 3
+      run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
+      env:
+        ENV_CONTEXT: ${{ toJSON(env) }}
 
 
 
