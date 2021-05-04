@@ -6,6 +6,11 @@ pipeline {
         }
     }
     stages {
+        stage('Set version') {
+            steps {
+                // sh 'mvn versions:set -DnewVersion=1.1-SNAPSHOT'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
