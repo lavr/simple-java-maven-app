@@ -83,6 +83,7 @@ pipeline {
                            #!/usr/bin/env bash
                            set +x
                            export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no -v"
+                           git push origin \$NEXT_GITHUB_TAG
                            git push origin \$NEXT_GITHUB_TAG --tags
                         """)
                    }
