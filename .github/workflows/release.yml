@@ -5,5 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: lavr/action-release@master
+      id: runactionrelease
+      name: Run action-release
       with:
         version: 1.0
+    - name: Echo result
+      run: |
+        echo "${{ steps.runactionrelease.outputs.version }}"
+
