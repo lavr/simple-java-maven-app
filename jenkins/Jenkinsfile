@@ -66,6 +66,8 @@ pipeline {
                    NEXT_JAVA_VERSION = build_params.SetVersion;
                    NEXT_GITHUB_TAG = build_params.SetVersion;
 
+                   sh("git checkout " +  env.BRANCH_NAME);
+
                    sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
 
                    sh("""
@@ -77,7 +79,7 @@ pipeline {
                         git config --list
                    """)
 
-                   sh("git checkout " +  env.BRANCH_NAME);
+
                    sh("git tag -f " + NEXT_GITHUB_TAG + " -m '" + build_params.Message + "'")
                    sh("git add pom.xml")
                    sh("git commit -m 'release " + NEXT_JAVA_VERSION + "'")
