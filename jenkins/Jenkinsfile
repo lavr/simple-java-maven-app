@@ -27,33 +27,36 @@ pipeline {
                             env.USER_ID = "${BUILD_USER_ID}"
                         }
                     }
-
-                    script {
-                        NEXT_VERSION = sh (
-                            script: 'jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
-                            returnStdout: true
-                        ).trim()
-                    }
-
-                    milestone 1
-
-                    script {
-                       message = 'Deploy branch ' + params.upstream_branch;
-                       deploy_params = input message: message, parameters:[
-                            booleanParam(name: 'BumpVersion', defaultValue: false, description: 'Изменить версию'),
-                            string(name: 'SetVersion', defaultValue: NEXT_VERSION, description: 'Установить эту версию')
-                       ];
-                    }
                 }
 
         }
 
         stage('Set version') {
             when {
-                expression { deploy_params.BumpVersion == true }
+                expression { params.bump_version == true }
             }
             steps {
-                echo "set version to ${deploy_params.SetVersion}";
+
+                script {
+                    NEXT_VERSION = sh (
+                        script: 'jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
+                        returnStdout: true
+                    ).trim()
+                }
+
+                milestone 1
+
+                script {
+                   message = 'Deploy branch ' + params.upstream_branch;
+                   deploy_params = input message: message, parameters:[
+                        string(name: 'SetVersion', defaultValue: NEXT_VERSION, description: 'Установить эту версию')
+                   ];
+
+                   echo 'mvn versions:set -DnewVersion=${deploy_params.SetVersion}';
+                }
+
+
+
             }
         }
 
