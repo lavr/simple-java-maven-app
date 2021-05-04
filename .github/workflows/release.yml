@@ -19,17 +19,21 @@ jobs:
     - uses: actions/setup-python@v2
       name: Set up Python
     - name: Dump GitHub context
+      run: echo "$GITHUB_CONTEXT=$GITHUB_CONTEXT"
       env:
         GITHUB_CONTEXT: ${{ toJSON(github) }}
     - name: Dump env context
+      run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
       env:
         ENV_CONTEXT: ${{ toJSON(env) }}
     - name: Get current version
       run: echo "CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
     - name: Get current version 3
+      run: echo "CURRENT_VERSION=$CURRENT_VERSION"
       env:
           CURRENT_VERSION: "$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
     - name: Dump env context 2
+      run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
       env:
         ENV_CONTEXT: ${{ toJSON(env) }}
     - name: Get next version
