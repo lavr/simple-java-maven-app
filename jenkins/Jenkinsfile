@@ -5,16 +5,58 @@ pipeline {
             args '-v $HOME/.m2:/root/.m2'
         }
     }
+
+    parameters {
+        booleanParam(name: 'bump_version', defaultValue: false, description: 'Установить версию (номер версии спросим позже)')
+    }
+
     stages {
-        stage('Set version') {
-            steps {
-                NEW_VERSION = sh (
-                    script: 'python jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
-                    returnStdout: true
-                ).trim()
-                echo "${NEW_VERSION}";
+
+        stage('Prepare') {
+
+                steps {
+
+                    script {
+                        currentBuild.displayName = params.upstream_branch + " " + params.upstream_build_no;
+                        currentBuild.description = "Деплой для билда armonline/" +  params.upstream_branch  + '#' + params.upstream_build_no;
+                    }
+
+                    // Кладем логин jenkins-юзера в переменную окружения USER_ID, для будущих проверок
+                    wrap([$class: 'BuildUser']) {
+                        script {
+                            env.USER_ID = "${BUILD_USER_ID}"
+                        }
+                    }
+
+                    script {
+                        NEXT_VERSION = sh (
+                            script: 'python jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
+                            returnStdout: true
+                        ).trim()
+                    }
+
+                    milestone 1
+
+                    script {
+                       message = 'Deploy branch ' + params.upstream_branch;
+                       deploy_params = input message: message, parameters:[
+                            booleanParam(name: 'BumpVersion', defaultValue: false, description: 'Изменить версию'),
+                            string(name: 'SetVersion', defaultValue: '${NEXT_VERSION}', description: 'Установить эту версию')
+                       ];
+                    }
+                }
             }
         }
+
+        stage('Set version') {
+            when {
+                expression { deploy_params.BumpVersion == true }
+            }
+            steps {
+                echo "set version to ${deploy_params.SetVersion}";
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
