@@ -48,11 +48,11 @@ pipeline {
 
                 script {
                    message = 'Deploy branch ' + params.upstream_branch;
-                   deploy_params = input message: message, parameters:[
+                   SetVersion = input message: message, parameters:[
                         string(name: 'SetVersion', defaultValue: NEXT_VERSION, description: 'Установить эту версию')
                    ];
 
-                   echo 'mvn versions:set -DnewVersion=' + deploy_params.SetVersion;
+                   echo 'mvn versions:set -DnewVersion=${SetVersion}';
                 }
 
 
