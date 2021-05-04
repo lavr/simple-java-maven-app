@@ -7,7 +7,8 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: 'bump_version', defaultValue: false, description: 'Установить версию (номер версии спросим позже)')
+        booleanParam(name: 'bump_version', defaultValue: false, description: 'Сменить версию (номер версии спросим позже)')
+        booleanParam(name: 'with_migrations', defaultValue: false, description: 'Собрать с миграциямм')
     }
 
     stages {
@@ -38,21 +39,30 @@ pipeline {
             steps {
 
                 script {
-                    NEXT_VERSION = sh (
+                    SUGGEST_VERSION = sh (
                         script: 'jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
                         returnStdout: true
                     ).trim()
+
+                    RELEASE_MESSAGE = sh (
+                        script: 'git log --oneline $(git describe --tags --abbrev=0 @^)..@',
+                        returnStdout: true
+                    )
                 }
 
                 milestone 1
 
                 script {
                    message = 'Deploy branch ' + params.upstream_branch;
-                   SetVersion = input message: message, parameters:[
-                        string(name: 'SetVersion', defaultValue: NEXT_VERSION, description: 'Установить эту версию')
+                   build_params = input message: message, parameters:[
+                        string(name: 'SetVersion', defaultValue: SUGGEST_VERSION, description: 'Установить эту версию'),
+                        string(name: 'Message', defaultValue: RELEASE_MESSAGE, description: 'Комментарий к релизу'),
                    ];
 
-                   echo 'mvn versions:set -DnewVersion=' + SetVersion;
+                   NEXT_JAVA_VERSION = build_params.SetVersion;
+                   NEXT_GITHUB_TAG = build_params.SetVersion;
+                   sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
+                   sh 'git tag -f ' + NEXT_GITHUB_TAG + ' -m "' + build_params.Message + '"';
                 }
 
 
