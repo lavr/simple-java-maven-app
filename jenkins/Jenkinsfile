@@ -16,10 +16,10 @@ pipeline {
 
                 steps {
 
-                    script {
+                   //  script {
                         // currentBuild.displayName = params.upstream_branch + " " + params.upstream_build_no;
                         // currentBuild.description = "Деплой для билда armonline/" +  params.upstream_branch  + '#' + params.upstream_build_no;
-                    }
+                    // }
 
                     // Кладем логин jenkins-юзера в переменную окружения USER_ID, для будущих проверок
                     wrap([$class: 'BuildUser']) {
