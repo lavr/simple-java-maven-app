@@ -41,7 +41,7 @@ pipeline {
                        message = 'Deploy branch ' + params.upstream_branch;
                        deploy_params = input message: message, parameters:[
                             booleanParam(name: 'BumpVersion', defaultValue: false, description: 'Изменить версию'),
-                            string(name: 'SetVersion', defaultValue: '${NEXT_VERSION}', description: 'Установить эту версию')
+                            string(name: 'SetVersion', defaultValue: NEXT_VERSION, description: 'Установить эту версию')
                        ];
                     }
                 }
