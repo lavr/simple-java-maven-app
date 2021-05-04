@@ -52,7 +52,7 @@ pipeline {
                         string(name: 'SetVersion', defaultValue: NEXT_VERSION, description: 'Установить эту версию')
                    ];
 
-                   echo 'mvn versions:set -DnewVersion=${deploy_params.SetVersion}';
+                   echo 'mvn versions:set -DnewVersion=' + deploy_params.SetVersion;
                 }
 
 
