@@ -59,7 +59,7 @@ pipeline {
                         text(name: 'Message', defaultValue: RELEASE_MESSAGE, description: 'Комментарий к релизу'),
                    ];
 
-                   echo "TARGET_BRANCH=$TARGET_BRANCH";
+                   // echo "TARGET_BRANCH=$TARGET_BRANCH";
 
                    NEXT_JAVA_VERSION = build_params.SetVersion;
                    NEXT_GITHUB_TAG = build_params.SetVersion;
