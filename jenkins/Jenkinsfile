@@ -66,10 +66,14 @@ pipeline {
 
                    sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
 
-                   sh("git config user.email jeknins@sv-jk01.invitro.ru")
-                   sh("git config user.name 'jeknins@sv-jk01.invitro.ru'")
-                   sh("git remote set-url origin `git config --get remote.origin.url | sed 's/https:\/\/github.com\//git@github.com:/g'`")
-                   sh("git config --list")
+                   sh("""
+                        #!/usr/bin/env bash
+                        git config user.email jeknins@sv-jk01.invitro.ru
+                        git config user.name 'jeknins@sv-jk01.invitro.ru'
+                        git remote set-url origin `git config --get remote.origin.url | sed 's/https:\\/\\/github.com\\//git@github.com:/g'`
+                        git config --list
+                   """)
+
                    sh("git tag -f " + NEXT_GITHUB_TAG + " -m '" + build_params.Message + "'")
                    sh("git add pom.xml")
                    sh("git commit -m 'release " + NEXT_JAVA_VERSION + "'")
