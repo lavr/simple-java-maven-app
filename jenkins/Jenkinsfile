@@ -61,8 +61,13 @@ pipeline {
 
                    NEXT_JAVA_VERSION = build_params.SetVersion;
                    NEXT_GITHUB_TAG = build_params.SetVersion;
-                   sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
+
+                   sh("git config user.email jeknins@sv-jk01.invitro.ru")
+                   sh("git config user.name 'jeknins@sv-jk01.invitro.ru'")
                    sh 'git tag -f ' + NEXT_GITHUB_TAG + ' -m "' + build_params.Message + '"';
+
+                   sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
+
                 }
 
 
