@@ -65,7 +65,18 @@ pipeline {
                    sh("git config user.email jeknins@sv-jk01.invitro.ru")
                    sh("git config user.name 'jeknins@sv-jk01.invitro.ru'")
                    sh("git config --list")
+                   sh("git add **/pom.xml")
+                   sh("git commit -m  'release " + NEXT_JAVA_VERSION + "'")
                    sh 'git tag -f ' + NEXT_GITHUB_TAG + ' -m "' + build_params.Message + '"';
+
+                   sshagent(['github-lavr-token']) {
+                       sh("""
+                           #!/usr/bin/env bash
+                           set +x
+                           export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no"
+                           git push --tags
+                        """)
+                   }
 
                    sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
 
