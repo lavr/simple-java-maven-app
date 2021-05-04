@@ -60,6 +60,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: Dump env context 4
+      run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
+      env:
+        ENV_CONTEXT: ${{ toJSON(env) }}
     - run: |
         echo "$NEXT_VERSION"
     - run: |
