@@ -68,6 +68,7 @@ pipeline {
 
                    sh("git config user.email jeknins@sv-jk01.invitro.ru")
                    sh("git config user.name 'jeknins@sv-jk01.invitro.ru'")
+                   sh("git remote set-url origin `git config --get remote.origin.url | sed 's/https:\/\/github.com\//git@github.com:/g'`")
                    sh("git config --list")
                    sh("git tag -f " + NEXT_GITHUB_TAG + " -m '" + build_params.Message + "'")
                    sh("git add pom.xml")
