@@ -51,21 +51,6 @@ jobs:
       run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
       env:
         ENV_CONTEXT: ${{ toJSON(env) }}
-
-
-
-  changelog:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Dump env context 4
-      run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
-      env:
-        ENV_CONTEXT: ${{ toJSON(env) }}
-    - run: |
-        echo "$NEXT_VERSION"
     - run: |
         mkdir -p release/${NEXT_VERSION}
         contrib/changelog-md.sh > release/${NEXT_VERSION}/changelog.md
