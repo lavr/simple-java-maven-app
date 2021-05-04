@@ -18,10 +18,24 @@ jobs:
         distribution: 'adopt'
     - uses: actions/setup-python@v2
       name: Set up Python
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+    - name: Dump env context
+      env:
+        ENV_CONTEXT: ${{ toJSON(env) }}
     - name: Get current version
       run: echo "CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+    - name: Get current version 3
+      env:
+          CURRENT_VERSION: "$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+    - name: Dump env context 2
+      env:
+        ENV_CONTEXT: ${{ toJSON(env) }}
     - name: Get next version
       run: echo "NEXT_VERSION=$(python contrib/bump-version.py --current-version=$CURRENT_VERSION --suffixes=-SNAPSHOT)" >> $GITHUB_ENV
+
+
 
   changelog:
     runs-on: ubuntu-latest
