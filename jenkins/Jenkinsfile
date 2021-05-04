@@ -49,7 +49,7 @@ pipeline {
                     RELEASE_MESSAGE = sh (
                         script: 'git log --oneline $(git describe --tags --abbrev=0 @^)..@',
                         returnStdout: true
-                    )
+                    ).trim()
                 }
 
                 milestone 1
@@ -65,8 +65,8 @@ pipeline {
 
                    NEXT_JAVA_VERSION = build_params.SetVersion;
 
-                   GITHUB_TAG_SUFFIX = sh (script: "date +%Y.%m.%d", returnStdout: true)
-                   GITHUB_TAG_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true)
+                   GITHUB_TAG_SUFFIX = sh (script: "date +%Y.%m.%d", returnStdout: true).trim()
+                   GITHUB_TAG_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true).trim()
                    NEXT_GITHUB_TAG = build_params.SetVersion + "-" + GITHUB_TAG_SUFFIX + "-" + GITHUB_TAG_HASH;
 
                    sh("git checkout " +  env.BRANCH_NAME);
