@@ -18,6 +18,9 @@ jobs:
         distribution: 'adopt'
     - uses: actions/setup-python@v2
       name: Set up Python
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Dump GitHub context
       run: echo "$GITHUB_CONTEXT=$GITHUB_CONTEXT"
       env:
