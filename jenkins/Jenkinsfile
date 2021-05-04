@@ -64,7 +64,10 @@ pipeline {
                    // echo "TARGET_BRANCH=$TARGET_BRANCH";
 
                    NEXT_JAVA_VERSION = build_params.SetVersion;
-                   NEXT_GITHUB_TAG = build_params.SetVersion;
+
+                   GITHUB_TAG_SUFFIX = sh ("date +%Y.%m.%d")
+                   GITHUB_TAG_HASH = sh ("git rev-parse --short HEAD")
+                   NEXT_GITHUB_TAG = build_params.SetVersion + "-" + GITHUB_TAG_SUFFIX + "-" + GITHUB_TAG_HASH;
 
                    sh("git checkout " +  env.BRANCH_NAME);
 
