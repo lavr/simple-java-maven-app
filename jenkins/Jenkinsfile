@@ -73,7 +73,7 @@ pipeline {
                    sh("git add pom.xml")
                    sh("git commit -m 'release " + NEXT_JAVA_VERSION + "'")
 
-                   sshagent(['github-lavr-token']) {
+                   sshagent(['simple-java-maven-app-github-key']) {
                        sh("""
                            #!/usr/bin/env bash
                            set +x
