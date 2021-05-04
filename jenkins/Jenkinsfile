@@ -68,12 +68,14 @@ pipeline {
 
                    sh("""
                         #!/usr/bin/env bash
+                        set +x
                         git config user.email jeknins@sv-jk01.invitro.ru
                         git config user.name 'jeknins@sv-jk01.invitro.ru'
                         git remote set-url origin `git config --get remote.origin.url | sed 's/https:\\/\\/github.com\\//git@github.com:/g'`
                         git config --list
                    """)
 
+                   sh("git checkout " +  env.BRANCH_NAME);
                    sh("git tag -f " + NEXT_GITHUB_TAG + " -m '" + build_params.Message + "'")
                    sh("git add pom.xml")
                    sh("git commit -m 'release " + NEXT_JAVA_VERSION + "'")
@@ -83,8 +85,8 @@ pipeline {
                            #!/usr/bin/env bash
                            set +x
                            export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no -v"
-                           git push origin \$NEXT_GITHUB_TAG
-                           git push origin \$NEXT_GITHUB_TAG --tags
+                           git push
+                           git push --tags
                         """)
                    }
 
