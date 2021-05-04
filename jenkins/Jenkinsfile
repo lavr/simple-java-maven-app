@@ -7,7 +7,7 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: 'bump_version', defaultValue: false, description: 'Сменить версию (номер версии спросим позже)')
+        booleanParam(name: 'bump_version', defaultValue: true, description: 'Сменить версию (номер версии спросим позже)')
         booleanParam(name: 'with_migrations', defaultValue: false, description: 'Собрать с миграциямм')
     }
 
@@ -64,6 +64,7 @@ pipeline {
 
                    sh("git config user.email jeknins@sv-jk01.invitro.ru")
                    sh("git config user.name 'jeknins@sv-jk01.invitro.ru'")
+                   sh("git config --list")
                    sh 'git tag -f ' + NEXT_GITHUB_TAG + ' -m "' + build_params.Message + '"';
 
                    sh 'mvn versions:set -DnewVersion=' + NEXT_JAVA_VERSION;
