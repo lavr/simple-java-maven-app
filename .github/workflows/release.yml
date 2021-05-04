@@ -55,6 +55,7 @@ jobs:
         git config user.email github-actions@github.com
         git add pom.xml
         git commit -m "release ${NEXT_VERSION}"
+        git tag ${NEXT_VERSION} -m "release ${NEXT_VERSION}"
         git push
         git push --tags
     - name: Init gh
