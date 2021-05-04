@@ -72,7 +72,7 @@ pipeline {
 
                    sh("""
                         #!/usr/bin/env bash
-                        set +x
+                        set -x
                         git config user.email jeknins@sv-jk01.invitro.ru
                         git config user.name 'jeknins@sv-jk01.invitro.ru'
                         git remote set-url origin `git config --get remote.origin.url | sed 's/https:\\/\\/github.com\\//git@github.com:/g'`
@@ -87,7 +87,7 @@ pipeline {
                    sshagent(['simple-java-maven-app-github-key']) {
                        sh("""
                            #!/usr/bin/env bash
-                           set +x
+                           set -x
                            export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no -v"
                            git push
                            git push --tags
