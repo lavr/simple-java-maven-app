@@ -1,11 +1,12 @@
 pipeline {
     agent {
         any
-        /* docker {
-            image 'maven:3-openjdk-11'
-            args '-v $HOME/.m2:/root/.m2'
-        } */
     }
+
+            /* docker {
+                image 'maven:3-openjdk-11'
+                args '-v $HOME/.m2:/root/.m2'
+            } */
 
     parameters {
         booleanParam(name: 'bump_version', defaultValue: true, description: 'Сменить версию (номер версии спросим позже)')
