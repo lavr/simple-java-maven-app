@@ -21,3 +21,6 @@
 * ... (Sergey Lavrinenko)
 * ... (Sergey Lavrinenko)
 * release (github-actions)
+* ... (Sergey Lavrinenko)
+* release (github-actions)
+* Merge branch 'master' of github.com:lavr/simple-java-maven-app (Sergey Lavrinenko)
