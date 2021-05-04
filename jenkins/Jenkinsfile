@@ -89,8 +89,8 @@ pipeline {
                            #!/usr/bin/env bash
                            set -x
                            export GIT_SSH_COMMAND="ssh -oStrictHostKeyChecking=no -v"
-                           git push
-                           git push --tags
+                           git push --set-upstream origin \$BRANCH_NAME
+                           git push --tags origin \$BRANCH_NAME
                         """)
                    }
 
