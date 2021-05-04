@@ -17,8 +17,8 @@ pipeline {
                 steps {
 
                     script {
-                        currentBuild.displayName = params.upstream_branch + " " + params.upstream_build_no;
-                        currentBuild.description = "Деплой для билда armonline/" +  params.upstream_branch  + '#' + params.upstream_build_no;
+                        // currentBuild.displayName = params.upstream_branch + " " + params.upstream_build_no;
+                        // currentBuild.description = "Деплой для билда armonline/" +  params.upstream_branch  + '#' + params.upstream_build_no;
                     }
 
                     // Кладем логин jenkins-юзера в переменную окружения USER_ID, для будущих проверок
@@ -30,7 +30,7 @@ pipeline {
 
                     script {
                         NEXT_VERSION = sh (
-                            script: 'python jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
+                            script: 'jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
                             returnStdout: true
                         ).trim()
                     }
