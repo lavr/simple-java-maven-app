@@ -28,7 +28,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 300
+        fetch-depth: 0
     - run: |
         echo "$NEXT_VERSION"
     - run: |
