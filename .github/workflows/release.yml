@@ -32,15 +32,15 @@ jobs:
     - run: |
         echo "$NEXT_VERSION"
     - run: |
-        mkdir -p release/${INPUT_VERSION}
-        contrib/changelog-md.sh > changelog.md
+        mkdir -p release/${NEXT_VERSION}
+        contrib/changelog-md.sh > release/${NEXT_VERSION}/changelog.md
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add release
+        git commit -m "release ${NEXT_VERSION}"
+        git push
     #- name: Echo result
     #  run: |
     #    echo "${{ steps.runactionrelease.outputs.version }}"
 
 
-#git config user.name github-actions
-#git config user.email github-actions@github.com
-#git add release
-#git commit -m "release"
-#git push
