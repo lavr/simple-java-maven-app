@@ -37,28 +37,28 @@ jobs:
       run: echo "CURRENT_VERSION=$CURRENT_VERSION"
       env:
           CURRENT_VERSION: "$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-    - name: Dump env context 2
-      run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
-      env:
-        ENV_CONTEXT: ${{ toJSON(env) }}
-    - name: pwd
-      run: pwd
-    - name: ls
-      run: ls -lhas
     - name: Get next version
       run: echo "NEXT_VERSION=$(python contrib/bump-version.py --current-version=$CURRENT_VERSION --suffixes=-SNAPSHOT)" >> $GITHUB_ENV
     - name: Dump env context 3
       run: echo "$ENV_CONTEXT=$ENV_CONTEXT"
       env:
         ENV_CONTEXT: ${{ toJSON(env) }}
-    - run: |
+    - name: Generate changelog
+      run: |
         mkdir -p release/${NEXT_VERSION}
         contrib/changelog-md.sh > release/${NEXT_VERSION}/changelog.md
+    - name: Set maven version
+      run: "mvn versions:set -DnewVersion=${NEXT_VERSION}"
+    - name: Commit maven version
+      run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git add release
+        git add pom.xml
         git commit -m "release ${NEXT_VERSION}"
         git push
+    - name: Create github release
+      run: |
+        gh release create ${NEXT_VERSION} -F release/${NEXT_VERSION}/changelog.md
     #- name: Echo result
     #  run: |
     #    echo "${{ steps.runactionrelease.outputs.version }}"
