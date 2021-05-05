@@ -1,4 +1,6 @@
 #!/bin/bash
+set -x
+set -e
 
 CURRENT_PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 echo $CURRENT_PROJECT_VERSION
