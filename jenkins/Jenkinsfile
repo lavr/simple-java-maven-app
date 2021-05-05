@@ -42,7 +42,7 @@ pipeline {
 
                 script {
                     SUGGEST_VERSION = sh (
-                        script: 'jenkins/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
+                        script: '.release/scripts/bump-version.py --current-version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout` --prefixes=MYAPP- --suffixes="-SNAPSHOT"',
                         returnStdout: true
                     ).trim()
 

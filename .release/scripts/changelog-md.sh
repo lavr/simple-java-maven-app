@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 current_tag="${GITHUB_REF#refs/tags/}"
 start_ref="HEAD"
